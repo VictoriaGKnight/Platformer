@@ -1,25 +1,16 @@
 using UnityEngine;
-using TMPro;
-using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpForce = 12f;
 
-    public TextMeshProUGUI healthText;
-    public TextMeshProUGUI scoreText;
-
     private Rigidbody2D rb;
     private bool isGrounded = false;
-
-    private int health = 100;
-    private int score = 0;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        UpdateUI();
     }
 
     void Update()
@@ -42,16 +33,11 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            health -= 10;
-            if (health <= 0)
+            GameManager.Instance.TakeDamage(10);
+
+            if (GameManager.Instance.Health <= 0)
             {
-                health = 0;
-                UpdateUI();
-                GameOver();
-            }
-            else
-            {
-                UpdateUI();
+                GameManager.Instance.TriggerGameOver();
             }
         }
     }
@@ -68,26 +54,8 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Coin"))
         {
-            score += 10;
+            GameManager.Instance.AddScore(10);
             Destroy(other.gameObject);
-            UpdateUI();
         }
-    }
-
-    void UpdateUI()
-    {
-        if (healthText != null)
-            healthText.text = "Health: " + health;
-
-        if (scoreText != null)
-            scoreText.text = "Score: " + score;
-    }
-
-    void GameOver()
-    {
-        PlayerPrefs.SetInt("FinalScore", score);
-        PlayerPrefs.Save();
-
-        SceneManager.LoadScene("GameOver");
     }
 }
