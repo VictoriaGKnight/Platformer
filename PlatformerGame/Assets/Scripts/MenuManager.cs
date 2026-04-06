@@ -13,6 +13,11 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene("GameScene");
     }
 
+    public void LoadHighScores()
+    {
+        SceneManager.LoadScene("HighScores");
+    }
+
     public void QuitGame()
     {
         Application.Quit();
